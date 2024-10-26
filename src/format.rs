@@ -291,19 +291,21 @@ pub fn default_format(
         let sep = style.line_separator();
         let final_sep = style.final_line_separator();
 
-        let mut lines = lines.iter().peekable();
+        let mut lines = lines.iter();
 
-        write!(buf, "{}{} {}", first_sep, prefix, lines.next().unwrap())?;
-
-        while let Some(line) = lines.next() {
-            if lines.peek().is_some() {
-                write!(buf, "{}{}", sep, line)?;
-            } else {
-                write!(buf, "{}{}", final_sep, line)?;
-            }
+        if let Some(first_line) = lines.next() {
+            write!(buf, "{}{} {}", first_sep, prefix, first_line)?;
         }
 
-        writeln!(buf)?;
+        let last_line = lines.next_back();
+
+        for line in lines {
+            write!(buf, "{}{}", sep, line)?;
+        }
+
+        if let Some(last_line) = last_line {
+            writeln!(buf, "{}{}", final_sep, last_line)?;
+        }
     }
 
     Ok(())
