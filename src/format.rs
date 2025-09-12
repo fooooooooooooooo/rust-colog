@@ -2,7 +2,7 @@
 //!
 use std::io::{Error, Write};
 
-use colored::*;
+use colored::Colorize;
 use env_logger::fmt::Formatter;
 use log::{Level, Record};
 
@@ -78,7 +78,7 @@ pub trait CologStyle {
     ///
     /// See [`default_level_color`]
     ///
-    fn level_color(&self, level: &log::Level, msg: &str) -> String {
+    fn level_color(&self, level: &Level, msg: &str) -> String {
         default_level_color(level, msg)
     }
 
@@ -192,7 +192,9 @@ impl CologStyle for DefaultCologStyle {}
 /// | [`Level::Debug`] | green   |
 /// | [`Level::Trace`] | magenta |
 ///
-pub fn default_level_color(level: &log::Level, msg: &str) -> String {
+#[allow(clippy::match_same_arms)]
+#[must_use]
+pub fn default_level_color(level: &Level, msg: &str) -> String {
     match level {
         Level::Error => msg.red(),
         Level::Warn => msg.yellow(),
@@ -222,7 +224,8 @@ pub fn default_level_color(level: &log::Level, msg: &str) -> String {
 /// | [`Level::Debug`] | `"D"` |
 /// | [`Level::Trace`] | `"T"` |
 ///
-pub fn default_level_token(level: &Level) -> &'static str {
+#[must_use]
+pub const fn default_level_token(level: &Level) -> &'static str {
     match level {
         Level::Error => "E",
         Level::Warn => "W",

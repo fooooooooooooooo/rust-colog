@@ -74,6 +74,7 @@ use format::CologStyle;
 /// builder.init();
 /// log::info!("logging is ready");
 /// ```
+#[must_use]
 pub fn basic_builder() -> Builder {
     let mut builder = Builder::new();
     builder.format(formatter(format::DefaultCologStyle));
@@ -93,6 +94,7 @@ pub fn basic_builder() -> Builder {
 /// builder.init();
 /// log::info!("logging is ready");
 /// ```
+#[must_use]
 pub fn default_builder() -> Builder {
     let mut builder = basic_builder();
     builder.filter(None, LevelFilter::Info);
@@ -104,6 +106,7 @@ pub fn default_builder() -> Builder {
 
 /// Deprecated. Use [`default_builder`] instead (see also [`basic_builder`])
 #[deprecated(note = "Use `default_builder` instead")]
+#[must_use]
 pub fn builder() -> Builder {
     default_builder()
 }
@@ -115,7 +118,7 @@ pub fn builder() -> Builder {
 ///
 /// If more flexibility is needed, see [`default_builder`] or [`basic_builder`]
 pub fn init() {
-    default_builder().init()
+    default_builder().init();
 }
 
 /// Convenience function to create binding formatter closure
