@@ -147,6 +147,9 @@ pub trait CologStyle {
     ///
     /// See [`default_format`]
     ///
+    /// # Errors
+    ///
+    /// Returns [`std::io::Error`] on write error.
     fn format(&self, buf: &mut Formatter, record: &Record<'_>) -> Result<(), Error> {
         default_format(self, buf, record)
     }
@@ -260,6 +263,9 @@ pub fn default_prefix_token(style: &(impl CologStyle + ?Sized), level: &Level) -
 ///
 /// (this is the default [`colog`](crate) style)
 ///
+/// # Errors
+///
+/// Returns [`std::io::Error`] on write error.
 pub fn default_format(
     style: &(impl CologStyle + ?Sized),
     buf: &mut Formatter,
