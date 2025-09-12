@@ -2,18 +2,12 @@
 name = "colog"
 version = "1.3.0"
 authors = ["Christian Iversen <ci@iversenit.dk>"]
-
 description = "The `colog` library is a simple formatter backend for the standard rust logging system (in the `log` crate)."
-
 repository = "https://github.com/chrivers/rust-colog"
-
 readme = "README.md"
-
 categories = ["value-formatting", "command-line-interface", "development-tools"]
-
 keywords = ["cli", "terminal", "logging", "log", "color"]
 license = "LGPL-3.0"
-
 edition = "2024"
 
 [dependencies]
