@@ -13,7 +13,7 @@ categories = ["value-formatting", "command-line-interface", "development-tools"]
 
 license = "LGPL-3.0"
 
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 log = '^0.4'
