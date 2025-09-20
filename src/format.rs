@@ -2,7 +2,7 @@
 //!
 use std::io::{Error, Write};
 
-use colored::*;
+use colored::Colorize;
 use env_logger::fmt::Formatter;
 use log::{Level, Record};
 
@@ -15,7 +15,7 @@ use log::{Level, Record};
 /// overriding one or more of the default implementations on the trait.
 ///
 /// # Examples
-
+///
 /// ```rust
 /// #[macro_use]
 /// extern crate log;
@@ -59,7 +59,7 @@ use log::{Level, Record};
 ///     trace!("trace message");
 /// }
 /// ```
-
+///
 pub trait CologStyle {
     /// Format a message for a particular log level
     ///
@@ -77,8 +77,8 @@ pub trait CologStyle {
     /// # Defaults
     ///
     /// See [`default_level_color`]
-
-    fn level_color(&self, level: &log::Level, msg: &str) -> String {
+    ///
+    fn level_color(&self, level: &Level, msg: &str) -> String {
         default_level_color(level, msg)
     }
 
@@ -98,7 +98,7 @@ pub trait CologStyle {
     /// # Defaults
     ///
     /// See [`default_level_token`]
-
+    ///
     fn level_token(&self, level: &Level) -> &str {
         default_level_token(level)
     }
@@ -112,7 +112,7 @@ pub trait CologStyle {
     /// # Defaults
     ///
     /// See [`default_prefix_token`]
-
+    ///
     fn prefix_token(&self, level: &Level) -> String {
         default_prefix_token(self, level)
     }
@@ -138,7 +138,7 @@ pub trait CologStyle {
     /// # Defaults
     ///
     /// `"\n"` + (`" | "` in bold white)
-
+    ///
     fn line_separator(&self) -> String {
         format!("\n{} ", " | ".white().bold())
     }
@@ -158,7 +158,10 @@ pub trait CologStyle {
     /// # Defaults
     ///
     /// See [`default_format`]
-
+    ///
+    /// # Errors
+    ///
+    /// Returns [`std::io::Error`] on write error.
     fn format(&self, buf: &mut Formatter, record: &Record<'_>) -> Result<(), Error> {
         default_format(self, buf, record)
     }
@@ -176,7 +179,7 @@ pub trait CologStyle {
 /// builder.init();
 ///
 /// info!("logging ready");
-
+///
 pub struct DefaultCologStyle;
 
 impl CologStyle for DefaultCologStyle {}
@@ -203,8 +206,10 @@ impl CologStyle for DefaultCologStyle {}
 /// | [`Level::Info`]  | green   |
 /// | [`Level::Debug`] | green   |
 /// | [`Level::Trace`] | magenta |
-
-pub fn default_level_color(level: &log::Level, msg: &str) -> String {
+///
+#[allow(clippy::match_same_arms)]
+#[must_use]
+pub fn default_level_color(level: &Level, msg: &str) -> String {
     match level {
         Level::Error => msg.red(),
         Level::Warn => msg.yellow(),
@@ -233,8 +238,9 @@ pub fn default_level_color(level: &log::Level, msg: &str) -> String {
 /// | [`Level::Info`]  | `"*"` |
 /// | [`Level::Debug`] | `"D"` |
 /// | [`Level::Trace`] | `"T"` |
-
-pub fn default_level_token(level: &Level) -> &'static str {
+///
+#[must_use]
+pub const fn default_level_token(level: &Level) -> &'static str {
     match level {
         Level::Error => "E",
         Level::Warn => "W",
@@ -250,7 +256,7 @@ pub fn default_level_token(level: &Level) -> &'static str {
 ///
 /// Formats the level token ([`style.level_token`]) using
 /// [`style.level_color`], wrapped in `[` and `]` formatted in bold blue.
-
+///
 pub fn default_prefix_token(style: &(impl CologStyle + ?Sized), level: &Level) -> String {
     format!(
         "{}{}{}",
@@ -268,7 +274,10 @@ pub fn default_prefix_token(style: &(impl CologStyle + ?Sized), level: &Level) -
 /// [`style.prefix_token`].
 ///
 /// (this is the default [`colog`](crate) style)
-
+///
+/// # Errors
+///
+/// Returns [`std::io::Error`] on write error.
 pub fn default_format(
     style: &(impl CologStyle + ?Sized),
     buf: &mut Formatter,
